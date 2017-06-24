@@ -1,18 +1,15 @@
 package com.serzh.demo.service.impl;
 
-import com.serzh.demo.exception.StorageException;
-import com.serzh.demo.exception.StorageFileNotFoundException;
 import com.serzh.demo.StorageProperties;
+import com.serzh.demo.exception.StorageException;
 import com.serzh.demo.service.StorageService;
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileSystemUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -43,11 +40,9 @@ public class FileSystemStorageService implements StorageService {
     @Override
     public Stream<Path> loadAll() {
         try {
-            Stream<Path> pathStream = Files.walk(this.rootLocation, 1)
+            return Files.walk(this.rootLocation, 1)
                     .filter(path -> !path.equals(this.rootLocation))
-//                    .map(path -> this.rootLocation.relativize(path));
                     .map(this.rootLocation::relativize);
-            return pathStream;
         } catch (IOException e) {
             throw new StorageException("Failed to read stored files", e);
         }
@@ -55,30 +50,17 @@ public class FileSystemStorageService implements StorageService {
     }
 
     @Override
-    public Path load(String filename) {
-        return rootLocation.resolve(filename);
-    }
-
-    @Override
-    public Resource loadAsResource(String filename) {
-        try {
-            Path file = load(filename);
-            Resource resource = new UrlResource(file.toUri());
-            if(resource.exists() || resource.isReadable()) {
-                return resource;
-            }
-            else {
-                throw new StorageFileNotFoundException("Could not read file: " + filename);
-
-            }
-        } catch (MalformedURLException e) {
-            throw new StorageFileNotFoundException("Could not read file: " + filename, e);
-        }
-    }
-
-    @Override
     public void deleteAll() {
         FileSystemUtils.deleteRecursively(rootLocation.toFile());
+    }
+
+    @Override
+    public void cleanDirectory() {
+        try {
+            FileUtils.cleanDirectory(rootLocation.toFile());
+        } catch (IOException e) {
+            throw new StorageException("Could not initialize storage", e);
+        }
     }
 
     @Override

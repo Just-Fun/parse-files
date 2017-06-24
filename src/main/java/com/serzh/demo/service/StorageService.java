@@ -1,6 +1,5 @@
 package com.serzh.demo.service;
 
-import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.file.Path;
@@ -14,10 +13,11 @@ public interface StorageService {
 
     Stream<Path> loadAll();
 
-    Path load(String filename);
+//    Path load(String filename);
 
-    Resource loadAsResource(String filename);
+//    Resource loadAsResource(String filename);
 
     void deleteAll();
 
+    void cleanDirectory();
 }

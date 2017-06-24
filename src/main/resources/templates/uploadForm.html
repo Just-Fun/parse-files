@@ -9,26 +9,65 @@
     <form method="POST" enctype="multipart/form-data" action="/">
         <table>
             <tr>
-                <td>File to upload:</td>
-                <td><input type="file" name="file"/></td>
+                <td>Files to upload:</td>
+                <td>
+                    <input type="file" accept=".txt,.rtf" name="files" multiple="multiple" required="required"/>
+                </td>
+
             </tr>
             <tr>
                 <td></td>
-                <td><input type="submit" value="Upload"/></td>
+                <td><input type="submit" value="Upload chosen files"/></td>
+            </tr>
+        </table>
+    </form>
+</div>
+
+<div th:if="${!files.empty}">
+    <table>
+        <tr>
+            <td>Uploaded files:</td>
+        </tr>
+    </table>
+    <ul>
+        <li th:each="file : ${files}">
+            <h4 th:text="${file}"/>
+        </li>
+    </ul>
+
+</div>
+
+<div th:if="${!files.empty}">
+    <form method="GET" action="/parse">
+        <!--<form method="GET" enctype="multipart/form-data" action="/parse">-->
+        <table>
+            <tr>
+                <td></td>
+                <td><input type="submit" value="Parse files"/></td>
             </tr>
         </table>
     </form>
 </div>
 
 <div>
-    <ul>
-        <td>Uploaded files:</td>
-        <li th:each="file : ${files}">
-            <!--<a th:href="${file}" th:text="${file}" />-->
-            <h4 th:text="${file}"/>
-            <!--<td>${file}</td>-->
-        </li>
-    </ul>
+    <!--<form method="GET" enctype="multipart/form-data" action="/clear">-->
+    <form method="GET" action="/clear">
+        <table>
+            <tr>
+                <td></td>
+                <td><input type="submit" value="Reset"/></td>
+            </tr>
+        </table>
+    </form>
+</div>
+
+<div th:if="${result}">
+    <table>
+        <tr>
+            <td>Result of parsing:</td>
+        </tr>
+    </table>
+    <p th:text="${result}"></p>
 </div>
 
 </body>
