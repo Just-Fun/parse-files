@@ -23,7 +23,7 @@
     </form>
 </div>
 
-<div th:if="${!files.empty}">
+<div th:if="${files != null and !files.empty}">
     <table>
         <tr>
             <td>Uploaded files:</td>
@@ -37,10 +37,14 @@
 
 </div>
 
-<div th:if="${!files.empty}">
+<!--th:if="${variable.something} == null"-->
+<!--th:if="${evaluation &lt; 49 and evaluation &gt; 29}"-->
+<!--<div th:if="${!files.empty}">-->
+<div>
     <form method="GET" action="/parse">
         <!--<form method="GET" enctype="multipart/form-data" action="/parse">-->
-        <table>
+        <!--<table th:if="${!files.empty}">-->
+        <table th:if="${files != null and !files.empty}">
             <tr>
                 <td></td>
                 <td><input type="submit" value="Parse files"/></td>
@@ -61,13 +65,32 @@
     </form>
 </div>
 
-<div th:if="${result}">
+<div th:if="${results}">
     <table>
         <tr>
             <td>Result of parsing:</td>
         </tr>
     </table>
-    <p th:text="${result}"></p>
+
+    <p id="demo"></p>
+
+    <!--<script type="text/javascript" th:inline="javascript">-->
+    <!--<script type="application/javascript" th:inline="javascript">-->
+    <script th:inline="javascript">
+                var map = /*[[${results}]]*/ [];
+        //        var map = [[${results}]];
+        //        var map = [(${results})];
+//        var map = /*[(${results})]*/ {};
+
+        var json = JSON.stringify(map, null, 4);
+//        alert(json);
+        //        document.getElementById("demo").innerHTML = JSON.stringify(map, null, '\t');
+        document.getElementById("demo").innerHTML = json;
+    </script>
+
+ <!--   <ul>
+        <h4 th:text="${results}"/>
+    </ul>-->
 </div>
 
 </body>
