@@ -24,6 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
 @SpringBootTest
+//@SpringBootTest(classes = FileUploadTestConfiguration.class)
 public class FileUploadTest {
 
     @Autowired
@@ -41,7 +42,7 @@ public class FileUploadTest {
         mvc.perform(get("/"))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("files",
-                        Matchers.contains("http://localhost/files/first.txt", "http://localhost/files/second.txt")));
+                        Matchers.contains("first.txt", "second.txt")));
 
     }
 

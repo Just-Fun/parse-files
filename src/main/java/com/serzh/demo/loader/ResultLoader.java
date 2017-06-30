@@ -5,7 +5,6 @@ import com.serzh.demo.repositories.ResultRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,7 +12,7 @@ import java.util.Map;
 /**
  * @author sergii.zagryvyi on 29.06.2017
  */
-@Component
+//@Component
 public class ResultLoader implements ApplicationListener<ContextRefreshedEvent> {
 
     private final ResultRepository resultRepository;
