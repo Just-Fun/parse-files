@@ -16,8 +16,8 @@ spring:
 
 # This tells Hibernate to recreate the database on startup
   jpa:
-    #hibernate.ddl-auto: update
-    hibernate.ddl-auto: create-drop
+    hibernate.ddl-auto: update
+#    hibernate.ddl-auto: create-drop
 
 # Path of the main dispatcher servlet
 server:

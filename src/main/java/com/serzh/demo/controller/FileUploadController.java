@@ -3,8 +3,8 @@ package com.serzh.demo.controller;
 import com.serzh.demo.exception.StorageFileNotFoundException;
 import com.serzh.demo.service.Parser;
 import com.serzh.demo.service.StorageService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -24,16 +24,17 @@ import java.util.stream.Collectors;
 
 @Controller
 @Slf4j
+@RequiredArgsConstructor
 public class FileUploadController {
 
     private final StorageService storageService;
     private final Parser parser;
 
-    @Autowired
+   /* @Autowired
     public FileUploadController(StorageService storageService, Parser parser) {
         this.storageService = storageService;
         this.parser = parser;
-    }
+    }*/
 
     @GetMapping("/")
     public String listUploadedFiles(Model model) throws IOException {
@@ -48,6 +49,8 @@ public class FileUploadController {
     @PostMapping("/")
     public String handleFileUpload(@RequestParam("files") MultipartFile files[],
                                    RedirectAttributes redirectAttributes) {
+
+//        check if file already upload(by name)
         for (MultipartFile file : files) {
             storageService.store(file);
         }
