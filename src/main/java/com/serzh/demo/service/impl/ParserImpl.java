@@ -1,7 +1,10 @@
 package com.serzh.demo.service.impl;
 
+import com.serzh.demo.data.Result;
+import com.serzh.demo.repositories.ResultRepository;
 import com.serzh.demo.service.Parser;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
@@ -26,15 +29,23 @@ public class ParserImpl implements Parser {
     @Value("${maxThreads}")
     private int maxThreads;
 
+    private final ResultRepository resultRepository;
+
+    @Autowired
+    public ParserImpl(ResultRepository resultRepository) {
+        this.resultRepository = resultRepository;
+    }
+
     @Override
     public Map<String, Integer> pars(List<Resource> resources) {
-
         List<Map<String, Integer>> mapList = parseFiles(resources);
-
         Map<String, Integer> unsortedMap = mergeMaps(mapList);
+        Map<String, Integer> sortMap = sortMapByValue(unsortedMap);
 
-        return sortMapByValue(unsortedMap);
+        Result result = Result.builder().resultMap(sortMap).build();
+        resultRepository.save(result);
 
+        return sortMap;
     }
 
     private List<Map<String, Integer>> parseFiles(List<Resource> resources) {
@@ -46,8 +57,7 @@ public class ParserImpl implements Parser {
                     try {
                         return createMapFromFile(r.getInputStream());
                     } catch (IOException e) {
-                        log.warn("");
-//                        e.printStackTrace();
+                        log.warn("Error during r.getInputStream() ", e);
                         return new HashMap<String, Integer>();
                     }
                 }, executor)
@@ -61,9 +71,6 @@ public class ParserImpl implements Parser {
         String line;
         try (BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
             while ((line = br.readLine()) != null) {
-               /* if (!line.isEmpty()) {
-                    linesToMap(map, line);
-                }*/
                 if (map.containsKey(line)) {
                     map.put(line, map.get(line) + 1);
                 } else {
@@ -71,7 +78,7 @@ public class ParserImpl implements Parser {
                 }
             }
         } catch (IOException e) {
-//            e.printStackTrace();
+            log.warn("Can't read file. ", e);
         }
         return map;
     }

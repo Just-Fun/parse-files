@@ -1,0 +1,48 @@
+# By default, Spring Data REST hosts a root collection of links at /.
+# Because we will host a web UI on the same path, you need to change the root URI.
+# NOTWORK spring.data.rest.base-path=api
+# NOTWORK spring.data.rest.baseUri=api
+# NOTWORK spring.data.rest.basePath=api
+
+location: upload-dir
+maxThreads: 3
+
+#change active: field to set your profile, don't forget to set profile data below
+spring:
+  profiles:
+    active: dev-serzh
+
+
+
+# This tells Hibernate to recreate the database on startup
+  jpa:
+    #hibernate.ddl-auto: update
+    hibernate.ddl-auto: create-drop
+
+# Path of the main dispatcher servlet
+server:
+#  servlet-path: /api/v1.0
+  port: 9004
+
+# change your data here:
+---
+
+spring:
+  profiles: dev-serzh
+  datasource.url: jdbc:postgresql://localhost:5432/parse-file-test
+  datasource.username: postgres  
+  datasource.password: postgres  
+#  datasource.driverClassName: org.postgresql.Driver 
+
+  #jpa.database-platform: org.hibernate.dialect.PostgreSQLDialect  
+# spring.jpa.show-sql: true  
+#spring.jpa.hibernate.ddl-auto: create-drop
+#spring.jpa.hibernate.ddl-auto: update
+
+spring.http.multipart.max-file-size: 128KB
+spring.http.multipart.max-request-size: 128KB
+
+
+
+
+
